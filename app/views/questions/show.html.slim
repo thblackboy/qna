@@ -4,7 +4,6 @@ h2= 'Answers'
 -if user_signed_in?
   = render 'shared/errors', resource: @exposed_answer
   = form_with model: [question, @exposed_answer], local: true do |f|
-    = f.hidden_field :author_id, value: current_user.id 
     = f.label :body
     = f.text_area :body, rowx: 7, cols: 60
     = f.submit 'Create answer'

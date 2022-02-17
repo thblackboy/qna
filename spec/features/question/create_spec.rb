@@ -16,7 +16,6 @@ I'd like to be able to ask a question
     scenario 'asks a question' do
       fill_in 'Title',	with: 'Question title'
       fill_in 'Body',	with: 'Question body'
-
       click_on 'Ask'
 
       expect(page).to have_content 'Question created'

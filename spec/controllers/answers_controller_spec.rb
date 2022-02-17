@@ -11,12 +11,12 @@ RSpec.describe AnswersController, type: :controller do
       it 'saves new answer to db' do
         expect do
           post :create,
-               params: { answer: attributes_for(:answer), question_id: question }
+               params: { answer: attributes_for(:answer, author: user), question_id: question }
         end.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        post :create, params: { answer: attributes_for(:answer, author: user), question_id: question }
         expect(response).to redirect_to assigns(:exposed_question)
       end
     end
@@ -24,29 +24,48 @@ RSpec.describe AnswersController, type: :controller do
     context 'with invalid attributes' do
       it 'does not save new answer to db' do
         expect do
-          post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
+          post :create, params: { answer: attributes_for(:answer, :invalid, author: user), question_id: question }
         end.to_not change(question.answers, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
+        post :create, params: { answer: attributes_for(:answer, :invalid, author: user), question_id: question }
         expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { question.answers.create!(body: 'Test answer', author_id: user.id) }
+    context 'is author' do
+      let!(:answer) { create(:answer, question: question, author: user) }
 
-    it 'deletes answer from db' do
-      expect do
+      it 'deletes answer from db' do
+        expect do
+          delete :destroy, params: { question_id: question, id: answer }
+        end.to change(question.answers, :count).by(-1)
+      end
+
+      it 'reditects to question' do
         delete :destroy, params: { question_id: question, id: answer }
-      end.to change(question.answers, :count).by(-1)
+        expect(response).to redirect_to assigns(:exposed_question)
+      end
     end
+    context 'is not author' do
+      let(:another_user) { create(:user) }
+      let!(:answer) { create(:answer, question: question, author: another_user) }
+      
+      
 
-    it 'reditects to question' do
-      delete :destroy, params: { question_id: question, id: answer }
-      expect(response).to redirect_to assigns(:exposed_question)
+      it 'does not delete answer from db' do
+        expect do
+          delete :destroy, params: { question_id: question, id: answer }
+        end.to_not change(question.answers, :count)
+      end
+
+      it 'reditects to question' do
+        delete :destroy, params: { question_id: question, id: answer }
+        expect(response).to redirect_to assigns(:exposed_question)
+      end
     end
   end
 end

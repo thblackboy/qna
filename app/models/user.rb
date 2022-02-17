@@ -4,5 +4,10 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :answers, class_name: 'Answer', foreign_key: 'author_id', dependent: :destroy
+  has_many :questions, foreign_key: 'author_id', dependent: :destroy
+  has_many :answers, foreign_key: 'author_id', dependent: :destroy
+
+  def author_of?(item)
+    id == item.author.id
+  end
 end

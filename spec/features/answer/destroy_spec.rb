@@ -8,34 +8,33 @@ I'd like to delete my answer
   given(:user) { create(:user) }
   given(:another_user) { create(:user) }
   given!(:question) { create(:question) }
+  given!(:answer) { create(:answer, question: question, author: user) }
   describe 'Authenticated user' do
-    background do
-      login(user)
-    end
     scenario 'User tries to delete his answer' do
-      question.answers.create!(body: 'My answer', author_id: user.id)
+      login(user)
       click_on 'Show'
+
+      expect(page).to have_content(answer.body)
+
       click_on 'Delete'
 
-      expect(page).to_not have_content('My answer')
+      expect(page).to_not have_content(answer.body)
       expect(page).to have_content('Answer was deleted')
     end
 
     scenario 'tries to delete not his answer' do
-      question.answers.create!(body: 'My answer', author_id: another_user.id)
+      login(another_user)
       click_on 'Show'
-      click_on 'Delete'
 
-      expect(page).to have_content('My answer')
-      expect(page).to have_content("You can't delete someone else's answer")
+      expect(page).to have_content(answer.body)
+      expect(page).to_not have_content('Delete')
     end
   end
 
   scenario 'Unathenticated user tries to delete answer' do
-    question.answers.create!(body: 'My answer', author_id: user.id)
     visit root_path
     click_on 'Show'
-    click_on 'Delete'
-    expect(page).to have_content('You need to sign in or sign up before continuing')
+    expect(page).to have_content(answer.body)
+    expect(page).to_not have_content('Delete')
   end
 end
