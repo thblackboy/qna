@@ -53,8 +53,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'is not author' do
       let(:another_user) { create(:user) }
       let!(:answer) { create(:answer, question: question, author: another_user) }
-      
-      
 
       it 'does not delete answer from db' do
         expect do
