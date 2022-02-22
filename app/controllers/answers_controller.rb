@@ -4,13 +4,10 @@ class AnswersController < ApplicationController
   expose(:question)
   expose(:answers) { question.answers }
   expose :answer, build: ->(answer_params) { current_user.answers.build(answer_params) }
+  
   def create
     answer.question = question
-    if answer.save
-      redirect_to question, notice: 'Answer was created'
-    else
-      render 'questions/show'
-    end
+    answer.save
   end
 
   def destroy

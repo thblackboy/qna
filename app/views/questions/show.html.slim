@@ -2,16 +2,17 @@ h1= question.title
 p= question.body
 h2= 'Answers'
 -if user_signed_in?
-  = render 'shared/errors', resource: @exposed_answer
-  = form_with model: [question, @exposed_answer], local: true do |f|
+  .answer-errors
+    = render 'shared/errors', resource: @exposed_answer
+  = form_with model: [question, @exposed_answer], local: false do |f|
     = f.label :body
     = f.text_area :body, rowx: 7, cols: 60
     = f.submit 'Create answer'
 -else
   p= 'Only authenticated users can make answers'
 br
--if question.answers.present?
-  ul 
+.answers
+  -if question.answers.present? 
     =render question.answers
--else
-  p= 'No answers'
+  -else
+    p= 'No answers'
