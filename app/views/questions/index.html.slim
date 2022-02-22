@@ -1,0 +1,10 @@
+= link_to  "Ask question", new_question_path
+-if questions.present?
+  table
+    thead
+      th= 'Title'
+      th= 'Action'
+    tbody
+      =render questions
+-else
+  p= "No questions"
