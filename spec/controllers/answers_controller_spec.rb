@@ -43,13 +43,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'deletes answer from db' do
         expect do
-          delete :destroy, params: { question_id: question, id: answer }
+          delete :destroy, params: { question_id: question, id: answer }, format: :js
         end.to change(question.answers, :count).by(-1)
       end
 
       it 'reditects to question' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to assigns(:exposed_question)
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
     context 'is not author' do
@@ -58,13 +58,13 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not delete answer from db' do
         expect do
-          delete :destroy, params: { question_id: question, id: answer }
+          delete :destroy, params: { question_id: question, id: answer }, format: :js
         end.to_not change(question.answers, :count)
       end
 
       it 'reditects to question' do
-        delete :destroy, params: { question_id: question, id: answer }
-        expect(response).to redirect_to assigns(:exposed_question)
+        delete :destroy, params: { question_id: question, id: answer }, format: :js
+        expect(response).to render_template :destroy
       end
     end
   end

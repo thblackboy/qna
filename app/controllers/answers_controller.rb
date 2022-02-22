@@ -13,9 +13,6 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(answer)
       answer.destroy
-      redirect_to question, notice: 'Answer was deleted'
-    else
-      redirect_to question, notice: "You can't delete someone else's answer"
     end
   end
 

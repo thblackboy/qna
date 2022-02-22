@@ -9,7 +9,7 @@ I'd like to delete my answer
   given(:another_user) { create(:user) }
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, author: user) }
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     scenario 'User tries to delete his answer' do
       login(user)
       click_on 'Show'
@@ -19,7 +19,6 @@ I'd like to delete my answer
       click_on 'Delete'
 
       expect(page).to_not have_content(answer.body)
-      expect(page).to have_content('Answer was deleted')
     end
 
     scenario 'tries to delete not his answer' do

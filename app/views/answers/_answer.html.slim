@@ -1,5 +1,4 @@
 -if answer.persisted?
-  p 
-    = answer.body
-  -if current_user&.author_of?(answer)
-      = link_to  "Delete", question_answer_path(question, answer), method: :delete
+    p = answer.body 
+    -if current_user&.author_of?(answer)
+        = link_to  "Delete", question_answer_path(question, answer), method: :delete, remote: true
