@@ -15,8 +15,8 @@ I'd like to edit my question
 
       click_on 'Edit'
 
-      fill_in 'New title',	with: 'New Question title'
-      fill_in 'New body',	with: 'New Question body'
+      fill_in 'Edit title',	with: 'New Question title'
+      fill_in 'Edit body',	with: 'New Question body'
       click_on 'Save'
 
       expect(page).to have_content('New Question title')
@@ -30,8 +30,8 @@ I'd like to edit my question
 
       click_on 'Edit'
 
-      fill_in 'New title',	with: ''
-      fill_in 'New body',	with: 'New Question body'
+      fill_in 'Edit title',	with: ''
+      fill_in 'Edit body',	with: 'New Question body'
       click_on 'Save'
 
       expect(page).to have_content(question.title)

@@ -10,7 +10,12 @@ class AnswersController < ApplicationController
     answer.save
   end
 
+  def update
+    answer.update(answer_params)
+  end
+
   def destroy
+    @question = answer.question
     if current_user.author_of?(answer)
       answer.destroy
     end
