@@ -11,6 +11,10 @@ h2= 'Answers'
 -else
   p= 'Only authenticated users can make answers'
 br
-.answers
-  -if question.answers.present? 
-    =render question.answers
+.all-answers
+  .best-answer
+    -unless question.best_answer_id.nil?
+      =render Answer.find(question.best_answer_id)
+  .answers
+    =render question.answers.where.not(id: question.best_answer_id)
+    

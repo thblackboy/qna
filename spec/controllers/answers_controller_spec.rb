@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
   let!(:question) { create(:question, author: user) }
+  let!(:another_question) { create(:question, author: another_user) }
 
   before { login(user) }
 
@@ -79,6 +81,31 @@ RSpec.describe AnswersController, type: :controller do
                       format: :js
         expect(response).to render_template :create
       end
+    end
+  end
+
+  describe 'PATCH #set_best' do
+    let!(:answer) { create(:answer, question: question, author: user) }
+    let!(:another_answer) { create(:answer, question: another_question, author: user) }
+    context 'is questions author' do
+      it 'changes question best id' do
+        patch :set_best, params: { id: answer.id }, format: :js
+        question.reload
+        expect(question.best_answer_id).to eq(answer.id)
+      end
+    end
+
+    context 'is not questions author' do
+      it 'doesnt change question best id' do
+        patch :set_best, params: { id: another_answer.id }, format: :js
+        question.reload
+        expect(another_question.best_answer_id).to_not eq(another_answer.id)
+      end
+    end
+
+    it 'render set_best view' do
+      patch :set_best, params: { id: answer.id }, format: :js
+      expect(response).to render_template :set_best
     end
   end
 

@@ -1,0 +1,5 @@
+if($('.best-answer').children().length > 0){
+  $('.answers').prepend('<%= j render Answer.where(id: @old_best_answer_id) %>');
+}
+$('.answer#<%= answer.id %>').remove('');
+$('.best-answer').html('<%= j render answer %>');
