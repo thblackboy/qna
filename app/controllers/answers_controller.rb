@@ -4,21 +4,27 @@ class AnswersController < ApplicationController
   expose(:question)
   expose(:answers) { question.answers }
   expose :answer, build: ->(answer_params) { current_user.answers.build(answer_params) }
+  
   def create
     answer.question = question
-    if answer.save
-      redirect_to question, notice: 'Answer was created'
-    else
-      render 'questions/show'
+    answer.save
+  end
+
+  def update
+    answer.update(answer_params)
+  end
+
+  def set_best
+    if current_user.author_of?(answer.question)
+      @old_best_answer_id = answer.question.best_answer_id
+      answer.question.update(best_answer_id: answer.id)
     end
   end
 
   def destroy
+    @question = answer.question
     if current_user.author_of?(answer)
       answer.destroy
-      redirect_to question, notice: 'Answer was deleted'
-    else
-      redirect_to question, notice: "You can't delete someone else's answer"
     end
   end
 

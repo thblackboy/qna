@@ -1,5 +1,21 @@
 -if answer.persisted?
-  li 
-    = answer.body
-  -if current_user&.author_of?(answer)
-      = link_to  "Delete", question_answer_path(question, answer), method: :delete
+  .answer id = answer.id
+    p 
+      = answer.body 
+      -if current_user&.author_of?(answer)
+        = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+        = link_to  "Delete", answer_path(answer), method: :delete, remote: true
+      -if current_user&.author_of?(answer.question) && answer.id != answer.question.best_answer_id
+        = link_to  "Best answer", set_best_answer_path(answer), method: :patch, remote: true
+
+    .answer-errors id = answer.id
+      = render 'shared/errors', resource: answer
+    = form_with model: answer ,
+                  local: false,
+                  html: { style: 'display: none',
+                          id: "edit-answer-#{answer.id}" } do |f| 
+      =f.label :body, 'Edit body'
+      br
+      =f.text_area :body
+      br
+      =f.submit 'Save'

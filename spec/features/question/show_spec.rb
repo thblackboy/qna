@@ -17,10 +17,4 @@ I'like to be able to see question body and its answers
     expect(page).to have_content 'Question answer1'
     expect(page).to have_content 'Question answer2'
   end
-
-  scenario 'User tries to see question and answers dont exist' do
-    visit question_path(question)
-    expect(page).to have_content 'Question text'
-    expect(page).to have_content 'No answers'
-  end
 end

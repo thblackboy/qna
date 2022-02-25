@@ -16,6 +16,10 @@ class QuestionsController < ApplicationController
     @exposed_answer = Answer.new
   end
 
+  def update
+    question.update(question_params)
+  end
+
   def destroy
     if current_user.author_of?(question)
       question.destroy

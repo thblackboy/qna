@@ -7,7 +7,7 @@ I'd like to be able to answer the question
 " do
   given!(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background do
@@ -18,9 +18,9 @@ I'd like to be able to answer the question
     scenario 'create answer with valid attributes' do
       fill_in 'Body', with: 'My answer'
       click_on 'Create answer'
-
-      expect(page).to have_content 'Answer was created'
-      expect(page).to have_content 'My answer'
+      within '.answers' do
+        expect(page).to have_content 'My answer'
+      end
     end
 
     scenario 'create answer with invalid attributes' do
@@ -35,5 +35,6 @@ I'd like to be able to answer the question
     click_on 'Show'
 
     expect(page).to have_content 'Only authenticated users can make answers'
+    expect(page).to_not have_content 'Create answer'
   end
 end
