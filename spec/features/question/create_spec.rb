@@ -23,6 +23,16 @@ I'd like to be able to ask a question
       expect(page).to have_content 'Question body'
     end
 
+    scenario 'asks a question and attach files' do
+      fill_in 'Title',	with: 'Question title'
+      fill_in 'Body',	with: 'Question body'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Ask'
+
+      expect(page).to have_link 'rails_helper.rb'
+      expect(page).to have_link 'spec_helper.rb'
+    end
+
     scenario 'asks a question with invalid attributes' do
       click_on 'Ask'
       expect(page).to have_content "Title can't be blank"

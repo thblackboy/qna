@@ -2,7 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
   expose :questions, -> { Question.all }
-  expose :question, build: ->(question_params) { current_user.questions.build(question_params) }
+  expose :question, find: ->(id) { Question.with_attached_files.find(id) },
+                    build: ->(question_params) { current_user.questions.build(question_params) }
 
   def create
     if question.save
@@ -16,8 +17,16 @@ class QuestionsController < ApplicationController
     @exposed_answer = Answer.new
   end
 
+  def delete_attached_file
+    @file = ActiveStorage::Attachment.find(params[:file_id])
+    if current_user.author_of?(question) && @file.present?
+      @file.purge
+    end
+  end
+
   def update
-    question.update(question_params)
+    question.files.attach(params[:question][:files]) unless params[:question][:files].nil?
+    question.update(question_params_for_edit)
   end
 
   def destroy
@@ -32,6 +41,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
+    params.require(:question).permit(:title, :body, files: [])
+  end
+
+  def question_params_for_edit
     params.require(:question).permit(:title, :body)
   end
+
 end
