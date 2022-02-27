@@ -10,8 +10,16 @@ class AnswersController < ApplicationController
     answer.save
   end
 
+  def delete_attached_file
+    @file = ActiveStorage::Attachment.find(params[:file_id])
+    if current_user.author_of?(answer) && @file.present?
+      @file.purge
+    end
+  end
+
   def update
-    answer.update(answer_params)
+    answer.files.attach(params[:answer][:files]) unless params[:answer][:files].nil?
+    answer.update(answer_params_for_edit)
   end
 
   def set_best
@@ -31,6 +39,10 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
+    params.require(:answer).permit(:body, files: [])
+  end
+
+  def answer_params_for_edit
     params.require(:answer).permit(:body)
   end
 end

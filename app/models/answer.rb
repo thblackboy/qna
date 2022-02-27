@@ -4,5 +4,7 @@ class Answer < ApplicationRecord
 
   has_one :best_for_question, class_name: 'Question', foreign_key: 'best_answer_id', dependent: :nullify
 
+  has_many_attached :files
+
   validates :body, presence: true
 end

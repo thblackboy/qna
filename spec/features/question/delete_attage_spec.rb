@@ -10,7 +10,7 @@ I'd like to be able remove attached files
   given!(:question) { create(:question, author: user) }
   background { question.files.attach(fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")) }
   describe 'Authenticated user', js: true do
-    scenario 'User tries to delete his question' do
+    scenario 'User tries to delete attach file of his question' do
       login(user)
       expect(page).to have_content(question.title)
 
@@ -23,7 +23,7 @@ I'd like to be able remove attached files
       expect(page).to_not have_link('rails_helper.rb')
     end
 
-    scenario 'tries to delete not his question' do
+    scenario 'tries to delete attach file of not his question' do
       login(another_user)
 
       expect(page).to have_content(question.title)
@@ -37,7 +37,7 @@ I'd like to be able remove attached files
     end
   end
 
-  scenario 'Unathenticated user tries to delete question' do
+  scenario 'Unathenticated user tries to delete attach file of his question' do
     visit root_path
     expect(page).to have_content(question.title)
 

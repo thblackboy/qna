@@ -10,7 +10,7 @@ I'd like to edit my answer
   given!(:question) { create(:question, author: user) }
   given!(:answer) { create(:answer, question: question, author: user) }
   describe 'Authenticated user' do
-    scenario 'User tries to edit his answer', js: true do
+    scenario 'User tries to edit his answer and attach file', js: true do
       login(user)
       expect(page).to have_content(question.title)
 
@@ -22,9 +22,11 @@ I'd like to edit my answer
 
       within '.answers' do
         fill_in 'Edit body',	with: 'New answer body'
+        attach_file 'Files', "#{Rails.root}/spec/rails_helper.rb"
         click_on 'Save'
 
         expect(page).to have_content('New answer body')
+        expect(page).to have_link 'rails_helper.rb'
       end
     end
 

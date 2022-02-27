@@ -4,4 +4,7 @@
       p
         = link_to  file.filename.to_s, url_for(file)
         -if current_user&.author_of?(resource)
-          = link_to  "Delete file", delete_attached_file_question_url(id: resource, file_id: file.id), method: :delete, remote: true
+          -if resource.class.to_s == 'Question'
+            = link_to  "Delete file", delete_attached_file_question_url(id: resource, file_id: file.id), method: :delete, remote: true
+          -elsif resource.class.to_s == 'Answer'
+            = link_to  "Delete file", delete_attached_file_answer_url(id: resource, file_id: file.id), method: :delete, remote: true

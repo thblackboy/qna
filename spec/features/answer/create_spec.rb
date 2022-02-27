@@ -23,6 +23,17 @@ I'd like to be able to answer the question
       end
     end
 
+    scenario 'create answer and attach files' do
+      fill_in 'Body', with: 'My answer'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Create answer'
+
+      within '.answers' do
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
     scenario 'create answer with invalid attributes' do
       click_on 'Create answer'
 
