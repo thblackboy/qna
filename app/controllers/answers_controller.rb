@@ -10,13 +10,6 @@ class AnswersController < ApplicationController
     answer.save
   end
 
-  def delete_attached_file
-    @file = ActiveStorage::Attachment.find(params[:file_id])
-    if current_user.author_of?(answer) && @file.present?
-      @file.purge
-    end
-  end
-
   def update
     answer.files.attach(params[:answer][:files]) unless params[:answer][:files].nil?
     answer.update(answer_params_for_edit)

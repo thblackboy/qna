@@ -113,41 +113,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-
-  describe 'DELETE #delete_attached_file' do
-    context 'is author' do
-      let!(:question) { create(:question, author: user) }
-      before { question.files.attach(fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")) }
-      it 'deletes attached file from db' do
-        expect do
-          delete :delete_attached_file, params: { id: question, file_id: question.files[0].id }, format: :js
-          question.reload
-        end.to change(question.files, :length).by(-1)
-      end
-
-      it 'render delete attached file' do
-        delete :delete_attached_file, params: { id: question, file_id: question.files[0].id }, format: :js
-        question.reload
-        expect(response).to render_template :delete_attached_file
-      end
-    end
-    context 'is not author' do
-      let(:another_user) { create(:user) }
-      let!(:question) { create(:question, author: another_user) }
-      before { question.files.attach(fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")) }
-
-      it 'does not delete attached file from db' do
-        expect do
-          delete :delete_attached_file, params: { id: question, file_id: question.files[0].id }, format: :js
-          question.reload
-        end.to_not change(question.files, :length)
-      end
-
-      it 'render delete attached file' do
-        delete :delete_attached_file, params: { id: question, file_id: question.files[0].id }, format: :js
-        question.reload
-        expect(response).to render_template :delete_attached_file
-      end
-    end
-  end
 end
