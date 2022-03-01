@@ -9,7 +9,7 @@ I'd like to edit my question
   given(:another_user) { create(:user) }
   given!(:question) { create(:question, author: user) }
   describe 'Authenticated user' do
-    scenario 'User tries to edit his question', js: true do
+    scenario 'User tries to edit his question and attach file', js: true do
       login(user)
       expect(page).to have_content(question.title)
 
@@ -17,11 +17,13 @@ I'd like to edit my question
 
       fill_in 'Edit title',	with: 'New Question title'
       fill_in 'Edit body',	with: 'New Question body'
+      attach_file 'Files', "#{Rails.root}/spec/rails_helper.rb"
       click_on 'Save'
 
       expect(page).to have_content('New Question title')
       click_on 'Show'
       expect(page).to have_content('New Question body')
+      expect(page).to have_link 'rails_helper.rb'
     end
 
     scenario 'User tries to edit his question with errors', js: true do

@@ -14,6 +14,12 @@ RSpec.describe QuestionsController, type: :controller do
         expect(question.title).to eq('new title')
       end
 
+      it 'attaches new files to question and save changes to db' do
+        patch :update, params: { id: question.id, question: { files: [fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")] } }, format: :js
+        question.reload
+        expect(question.files.last.filename.to_s).to eq('rails_helper.rb')
+      end
+
       it 'render update view' do
         patch :update, params: { id: question.id, question: { title: 'new title' } }, format: :js
         expect(response).to render_template :update

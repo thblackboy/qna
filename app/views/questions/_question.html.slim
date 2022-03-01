@@ -11,12 +11,14 @@
                 local: false,
                 html: { style: 'display: none',
                         id: "edit-question-#{question.id}" } do |f| 
-    =f.label :title, 'Edit title'
-    br
-    =f.text_field :title
-    br
-    =f.label :body, 'Edit body'
-    br
-    =f.text_area :body
-    br
-    =f.submit 'Save'
+    p 
+      =f.label :title, 'Edit title'
+      =f.text_field :title
+    p
+      =f.label :body, 'Edit body'
+      =f.text_area :body
+    p
+      =f.label :files
+      =f.file_field :files, multiple: true, direct_upload: true
+    p
+      =f.submit 'Save'

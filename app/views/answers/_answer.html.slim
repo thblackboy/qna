@@ -2,6 +2,8 @@
   .answer id = answer.id
     p 
       = answer.body 
+    = render 'shared/attached_files', resource: answer
+    p
       -if current_user&.author_of?(answer)
         = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
         = link_to  "Delete", answer_path(answer), method: :delete, remote: true
@@ -14,8 +16,10 @@
                   local: false,
                   html: { style: 'display: none',
                           id: "edit-answer-#{answer.id}" } do |f| 
-      =f.label :body, 'Edit body'
-      br
-      =f.text_area :body
-      br
+      p
+        =f.label :body, 'Edit body'
+        =f.text_area :body
+      p
+        =f.label :files
+        =f.file_field :files, multiple: true, direct_upload: true
       =f.submit 'Save'
