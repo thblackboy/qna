@@ -30,6 +30,8 @@ gem 'decent_exposure', '~> 3.0'
 gem 'slim-rails'
 gem 'devise'
 gem 'aws-sdk-s3'
+gem "cocoon"
+gem "validate_url"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

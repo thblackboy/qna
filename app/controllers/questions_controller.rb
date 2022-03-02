@@ -14,7 +14,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    question.links.new
+    question.links.build
   end
 
   def show
@@ -46,11 +46,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy])
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
   end
 
 end
