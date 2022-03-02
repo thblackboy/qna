@@ -5,6 +5,13 @@ RSpec.describe QuestionsController, type: :controller do
 
   before { login(user) }
 
+  describe 'GET #new' do
+    it 'assigns a new link to question' do
+      get :new
+      expect(assigns(:exposed_question).links.first).to be_a_new(Link)
+    end
+  end
+
   describe 'PATCH #update' do
     let!(:question) { create(:question, author: user) }
     context 'with valid attributes' do

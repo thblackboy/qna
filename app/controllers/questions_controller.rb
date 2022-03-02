@@ -13,6 +13,10 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def new
+    question.links.new
+  end
+
   def show
     @exposed_answer = Answer.new
   end
@@ -41,7 +45,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url])
   end
 
   def question_params_for_edit

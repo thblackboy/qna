@@ -1,6 +1,9 @@
 h1= question.title 
 p= question.body
-= render 'shared/attached_files', resource: question
+.links
+  = render question.links
+.attaches
+  = render 'shared/attached_files', resource: question
 h2= 'Answers'
 -if user_signed_in?
   .answer-errors
