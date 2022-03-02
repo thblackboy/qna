@@ -2,7 +2,10 @@
   .answer id = answer.id
     p 
       = answer.body 
-    = render 'shared/attached_files', resource: answer
+    .links
+      = render answer.links
+    .attaches
+      = render 'shared/attached_files', resource: answer
     p
       -if current_user&.author_of?(answer)
         = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }

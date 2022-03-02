@@ -19,6 +19,7 @@ class QuestionsController < ApplicationController
 
   def show
     @exposed_answer = Answer.new
+    @exposed_answer.links.new
   end
 
   def delete_attached_file

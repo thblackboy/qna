@@ -12,6 +12,14 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
+  describe 'GET #show' do
+    let!(:question) { create(:question, author: user) }
+    it 'assigns a new link to answer' do
+      get :show, params: { id: question.id }
+      expect(assigns(:exposed_answer).links.first).to be_a_new(Link)
+    end
+  end
+
   describe 'PATCH #update' do
     let!(:question) { create(:question, author: user) }
     context 'with valid attributes' do
@@ -22,7 +30,8 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'attaches new files to question and save changes to db' do
-        patch :update, params: { id: question.id, question: { files: [fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")] } }, format: :js
+        patch :update,
+              params: { id: question.id, question: { files: [fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")] } }, format: :js
         question.reload
         expect(question.files.last.filename.to_s).to eq('rails_helper.rb')
       end

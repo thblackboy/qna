@@ -1,33 +1,32 @@
 require 'rails_helper'
 
-feature 'User can add links when asks question', "
-In order to add links which complete question description
+feature 'User can add links when makes answer', "
+In order to add links which complete answer
 As an authenticated user
-I'd like to be able to add links when ask question
+I'd like to be able to add links when make answer
 " do
-    describe 'Authenticated user' do
+    describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
+    given!(:question) { create(:question, author: user) }
 
     background do
       login(user)
-      click_on 'Ask question'
+      click_on 'Show'
     end
 
     scenario 'asks and adds links' do
-      fill_in 'Title',	with: 'Question title'
-      fill_in 'Body',	with: 'Question body'
+      fill_in 'Body', with: 'My answer'
       fill_in 'Link name', with: 'google'
       fill_in 'Url', with: 'https://google.com'
-      click_on 'Ask'
+      click_on 'Create answer'
 
       expect(page).to have_link 'google', href: 'https://google.com'
     end
 
     scenario 'asks and adds invalid links' do
-      fill_in 'Title',	with: 'Question title'
-      fill_in 'Body',	with: 'Question body'
+      fill_in 'Body', with: 'My answer'
       fill_in 'Link name', with: 'google'
-      click_on 'Ask'
+      click_on 'Create answer'
 
       expect(page).to have_content "Links url can't be blank"
     end
