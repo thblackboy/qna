@@ -51,7 +51,7 @@ class QuestionsController < ApplicationController
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
+    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
   end
 
 end
