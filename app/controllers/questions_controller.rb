@@ -15,6 +15,7 @@ class QuestionsController < ApplicationController
 
   def new
     question.links.build
+    question.achieve = Achieve.new
   end
 
   def show
@@ -46,11 +47,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
+    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
   end
 
 end
