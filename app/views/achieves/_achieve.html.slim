@@ -1,0 +1,9 @@
+.achieve 
+  p
+    = achieve.title
+  .image
+    -if achieve.image.attached?
+      = image_tag  url_for(achieve.image)
+  p
+    = achieve.question.title  
+    

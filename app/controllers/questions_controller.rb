@@ -13,8 +13,14 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def new
+    question.links.build
+    question.achieve = Achieve.new
+  end
+
   def show
     @exposed_answer = Answer.new
+    @exposed_answer.links.new
   end
 
   def delete_attached_file
@@ -41,11 +47,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
   end
 
 end

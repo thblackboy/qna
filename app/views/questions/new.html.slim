@@ -1,13 +1,29 @@
 = render 'shared/errors', resource: question
 = form_with model: question , local: true do |f| 
-  p 
+  .field 
     =f.label :title
     =f.text_field :title
-  p
+  .field 
     =f.label :body
     =f.text_area :body
-  p
+  .field 
     =f.label :files
     =f.file_field :files, multiple: true, direct_upload: true
+  .field 
+    p Achieve
+    = f.fields_for :achieve do |a|
+      .field 
+        =a.label :title, 'Achieve title'
+        =a.text_field :title
+      .field
+        =a.label :image, 'Achieve image'
+        =a.file_field :image, accept:'image/*', direct_upload: true
+  .field
+    p Links
+    #links
+      = f.fields_for :links do |link|
+        = render 'link_fields', f: link
+      .links
+        = link_to_add_association 'add link', f, :links
   p
     =f.submit 'Ask'

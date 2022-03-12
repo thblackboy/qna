@@ -16,9 +16,11 @@ class AnswersController < ApplicationController
   end
 
   def set_best
-    if current_user.author_of?(answer.question)
-      @old_best_answer_id = answer.question.best_answer_id
-      answer.question.update(best_answer_id: answer.id)
+    question = answer.question
+    if current_user.author_of?(question)
+      answer.author.achieves.push(question.achieve) if question.achieve.present?
+      @old_best_answer_id = question.best_answer_id
+      question.update(best_answer_id: answer.id)
     end
   end
 
@@ -32,10 +34,10 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])
   end
 
   def answer_params_for_edit
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, links_attributes: [:name, :url])
   end
 end

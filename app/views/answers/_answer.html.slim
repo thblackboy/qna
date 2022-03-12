@@ -2,7 +2,10 @@
   .answer id = answer.id
     p 
       = answer.body 
-    = render 'shared/attached_files', resource: answer
+    .links
+      = render answer.links
+    .attaches
+      = render 'shared/attached_files', resource: answer
     p
       -if current_user&.author_of?(answer)
         = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -22,4 +25,11 @@
       p
         =f.label :files
         =f.file_field :files, multiple: true, direct_upload: true
-      =f.submit 'Save'
+      p Links
+      #links
+        = f.fields_for :links do |link|
+          = render 'link_fields', f: link
+        .links
+          = link_to_add_association 'add link', f, :links
+      p
+        =f.submit 'Save'

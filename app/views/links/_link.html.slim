@@ -1,0 +1,6 @@
+.link id = link.id
+  -if link.gist?
+    script src="#{link.url}.js"
+  -else
+    p
+      = link_to  link.name, link.url
