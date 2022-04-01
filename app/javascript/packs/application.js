@@ -11,6 +11,7 @@ require("jquery")
 require("@nathanvda/cocoon")
 require('utilities/edit_question')
 require('utilities/edit_answer')
+require('utilities/voting')
 
 Rails.start()
 Turbolinks.start()

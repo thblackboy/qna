@@ -23,11 +23,23 @@ class QuestionsController < ApplicationController
     @exposed_answer.links.new
   end
 
+  def vote_up
+    unless current_user.author_of?(question) && current_user.vote_to(question).present?
+      question.votes.push(current_user.votes.new(value: 1))
+    end
+    render json: { id: question.id, total: question.vote_difference }
+  end
+
+  def vote_down
+    unless current_user.author_of?(question) && current_user.vote_to(question).present?
+      question.votes.push(current_user.votes.new(value: -1))
+    end
+    render json: { id: question.id, total: question.vote_difference }
+  end
+
   def delete_attached_file
     @file = ActiveStorage::Attachment.find(params[:file_id])
-    if current_user.author_of?(question) && @file.present?
-      @file.purge
-    end
+    @file.purge if current_user.author_of?(question) && @file.present?
   end
 
   def update
@@ -47,11 +59,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url id _destroy],
+                                                    achieve_attributes: %i[title image])
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
+    params.require(:question).permit(:title, :body, links_attributes: %i[name url id _destroy])
   end
-
 end
