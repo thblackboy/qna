@@ -22,7 +22,7 @@ RSpec.describe VotesController, type: :controller do
       it 'does not delete vote from db' do
         expect do
           delete :destroy, params: { id: vote }
-        end.to_not change(Question, :count)
+        end.to_not change(Vote, :count)
       end
     end
   end

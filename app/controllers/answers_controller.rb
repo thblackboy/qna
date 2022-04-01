@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  include Votabled
   before_action :authenticate_user!
 
   expose(:question)

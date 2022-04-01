@@ -5,6 +5,6 @@ class VotesController < ApplicationController
   def destroy
     vote.destroy if vote.voter_id == current_user.id
     votable = vote.votable
-    render json: { id: votable.id, total: votable.vote_difference }
+    render json: { id: votable.id, total: votable.vote_difference, votable_url: url_for(votable) }
   end
 end

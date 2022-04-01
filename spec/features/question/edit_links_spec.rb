@@ -26,7 +26,7 @@ I'd like to be able to edit links when ask question
       click_on 'Show'
 
       expect(page).to_not have_link 'google'
-      expect(page).to have_link 'google2', href: 'https://google.com'
+      expect(page).to have_link 'google2'
     end
 
     scenario 'edits links with invalid attributes' do

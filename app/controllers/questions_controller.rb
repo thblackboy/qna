@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+  include Votabled
   before_action :authenticate_user!, except: %i[index show]
 
   expose :questions, -> { Question.all }
@@ -21,20 +22,6 @@ class QuestionsController < ApplicationController
   def show
     @exposed_answer = Answer.new
     @exposed_answer.links.new
-  end
-
-  def vote_up
-    unless current_user.author_of?(question) && current_user.vote_to(question).present?
-      question.votes.push(current_user.votes.new(value: 1))
-    end
-    render json: { id: question.id, total: question.vote_difference }
-  end
-
-  def vote_down
-    unless current_user.author_of?(question) && current_user.vote_to(question).present?
-      question.votes.push(current_user.votes.new(value: -1))
-    end
-    render json: { id: question.id, total: question.vote_difference }
   end
 
   def delete_attached_file

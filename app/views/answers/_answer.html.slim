@@ -1,6 +1,14 @@
 -if answer.persisted?
   .answer id = answer.id
-    p 
+    .votes
+      -if current_user && !current_user.author_of?(answer)
+        -if current_user&.vote_to(answer).present?
+          = link_to  "Delete vote", vote_path(current_user.vote_to(answer)), method: :delete, class: 'delete-vote', data: { type: :json }, remote: true
+        -else
+          = link_to  "Vote Up", vote_up_answer_path(answer), method: :post, class: 'do-vote', data: { type: :json }, remote: true
+          = link_to  "Vote Down", vote_down_answer_path(answer), method: :post, class: 'do-vote', data: { type: :json }, remote: true
+      p = answer.vote_difference
+    .body
       = answer.body 
     .links
       = render answer.links
