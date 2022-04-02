@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+  include Votabled
   before_action :authenticate_user!, except: %i[index show]
 
   expose :questions, -> { Question.all }
@@ -25,9 +26,7 @@ class QuestionsController < ApplicationController
 
   def delete_attached_file
     @file = ActiveStorage::Attachment.find(params[:file_id])
-    if current_user.author_of?(question) && @file.present?
-      @file.purge
-    end
+    @file.purge if current_user.author_of?(question) && @file.present?
   end
 
   def update
@@ -47,11 +46,11 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body, files: [], links_attributes: [:name, :url, :id, :_destroy], achieve_attributes: [:title, :image])
+    params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url id _destroy],
+                                                    achieve_attributes: %i[title image])
   end
 
   def question_params_for_edit
-    params.require(:question).permit(:title, :body, links_attributes: [:name, :url, :id, :_destroy])
+    params.require(:question).permit(:title, :body, links_attributes: %i[name url id _destroy])
   end
-
 end

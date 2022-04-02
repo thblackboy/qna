@@ -1,3 +1,20 @@
 // Place all the styles related to the Question controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.question {
+  border: solid 1px;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+}
+.question div{
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.question a{
+  display: block;
+}
+.question p{
+  margin: 0px;
+}
