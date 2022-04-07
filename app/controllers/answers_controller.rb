@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   after_action :publish_answer, only: [:create]
   after_action :publish_comment, only: [:add_comment]
 
+  authorize_resource
 
   expose(:question)
   expose(:answers) { question.answers }
@@ -26,18 +27,15 @@ class AnswersController < ApplicationController
 
   def set_best
     question = answer.question
-    if current_user.author_of?(question)
-      answer.author.achieves.push(question.achieve) if question.achieve.present?
-      @old_best_answer_id = question.best_answer_id
-      question.update(best_answer_id: answer.id)
-    end
+    answer.author.achieves.push(question.achieve) if question.achieve.present?
+    @old_best_answer_id = question.best_answer_id
+    question.update(best_answer_id: answer.id)
   end
 
   def destroy
+    authorize!(:destroy, answer)
     @question = answer.question
-    if current_user.author_of?(answer)
-      answer.destroy
-    end
+    answer.destroy
   end
 
   private

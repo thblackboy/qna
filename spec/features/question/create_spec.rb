@@ -67,6 +67,6 @@ I'd like to be able to ask a question
   scenario 'Unauthenticated uset tries to ask question' do
     visit questions_path
     click_on 'Ask question'
-    expect(page).to have_content 'You need to sign in or sign up before continuing'
+    expect(page).to have_content 'You are not authorized to access this page.'
   end
 end
