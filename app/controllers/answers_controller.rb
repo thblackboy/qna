@@ -1,6 +1,9 @@
 class AnswersController < ApplicationController
   include Votabled
   before_action :authenticate_user!
+  after_action :publish_answer, only: [:create]
+  after_action :publish_comment, only: [:add_comment]
+
 
   expose(:question)
   expose(:answers) { question.answers }
@@ -9,6 +12,11 @@ class AnswersController < ApplicationController
   def create
     answer.question = question
     answer.save
+  end
+
+  def add_comment
+    @comment = current_user.comments.new(body: params['body'])
+    answer.comments.push(@comment)
   end
 
   def update
@@ -33,6 +41,32 @@ class AnswersController < ApplicationController
   end
 
   private
+
+  def publish_answer
+    unless answer.errors.any?
+      AnswerChannel.broadcast_to(question , { html: {
+        question_author: ApplicationController.render(partial: 'templates/answers/answer',
+                                              locals: { answer: answer, current_user: question.author }
+          ),
+        user: ApplicationController.render(partial: 'templates/answers/answer',
+                                              locals: { answer: answer, current_user: User.new }
+          ),
+        guest: ApplicationController.render(partial: 'templates/answers/answer',
+                                              locals: { answer: answer, current_user: nil }
+          )
+        
+      }, question_author_id: question.author_id, author_id: current_user.id })
+    end
+  end
+
+  def publish_comment
+    unless @comment.errors.any?
+      ActionCable.server.broadcast("answers_by_question_#{answer.question.id}", { html: ApplicationController.render(partial: 'templates/comments/comment',
+                                                                                      locals: { comment: @comment }),
+                                                  author_id: current_user.id,
+                                                  answer_id: answer.id })
+    end
+  end
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: [:name, :url])

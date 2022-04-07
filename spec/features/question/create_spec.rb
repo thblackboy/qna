@@ -5,6 +5,31 @@ In order to get answer from community
 As an authenticated user
 I'd like to be able to ask a question
 " do
+  context "multiply sessions" do
+    given(:user) { create(:user) }
+    scenario 'question appears on another users page', js: true do
+      Capybara.using_session('user') do
+        login(user)
+      end
+      Capybara.using_session('guest') do
+        visit questions_path
+      end
+      Capybara.using_session('user') do
+        click_on 'Ask question'
+        fill_in 'Title',	with: 'Question title'
+        fill_in 'Body',	with: 'Question body'
+        click_on 'Ask'
+
+        expect(page).to have_content 'Question created'
+        expect(page).to have_content 'Question title'
+        expect(page).to have_content 'Question body'
+      end
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'Question title'
+      end
+    end
+  end
+  
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 

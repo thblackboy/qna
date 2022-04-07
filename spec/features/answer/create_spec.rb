@@ -7,6 +7,30 @@ I'd like to be able to answer the question
 " do
   given!(:question) { create(:question) }
 
+  context "multiply sessions" do
+    given(:user) { create(:user) }
+    scenario 'answer appears on another users page', js: true do
+      Capybara.using_session('user') do
+        login(user)
+        click_on 'Show'
+      end
+      Capybara.using_session('guest') do
+        visit questions_path
+        click_on 'Show'
+      end
+      Capybara.using_session('user') do
+        fill_in 'Body', with: 'My answer'
+        click_on 'Create answer'
+        within '.answers' do
+          expect(page).to have_content 'My answer'
+        end
+      end
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'My answer'
+      end
+    end
+  end
+
   describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
