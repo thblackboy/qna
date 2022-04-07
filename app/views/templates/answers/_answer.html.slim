@@ -13,7 +13,13 @@
     .links
       = render answer.links
     .attaches
-      = render 'shared/attached_files', resource: answer
+      -if answer.files.attached?
+        - answer.files.each do |file|
+          .file id = file.id
+          p
+            = link_to  file.filename.to_s, url_for(file)
+            -if current_user&.author_of?(answer)
+              = link_to  "Delete file", attachment_path(file.id), method: :delete, remote: true
     p
       -if current_user&.author_of?(answer)
         = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
@@ -40,11 +46,5 @@
       p
         =f.label :files
         =f.file_field :files, multiple: true, direct_upload: true
-      p Links
-      #links
-        = f.fields_for :links do |link|
-          = render 'link_fields', f: link
-        .links
-          = link_to_add_association 'add link', f, :links
       p
         =f.submit 'Save'

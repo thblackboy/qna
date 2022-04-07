@@ -32,6 +32,7 @@ gem 'devise'
 gem 'aws-sdk-s3'
 gem "cocoon"
 gem "validate_url"
+gem 'gon'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

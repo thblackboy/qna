@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
+  has_many :comments, foreign_key: 'author_id', dependent: :destroy
   has_many :achieves, class_name: 'Achieve', dependent: :nullify
   has_many :votes, foreign_key: 'voter_id', dependent: :destroy
 

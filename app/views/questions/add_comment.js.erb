@@ -1,0 +1,7 @@
+let questionCommentsBlock = $('.question#<%= question.id %>').children('.comments');
+<% if @comment.errors.present? %>
+  questionCommentsBlock.prepend('<%= render 'shared/errors', resource: @comment %>');
+<% else %>
+  questionCommentsBlock.prepend('<p><%= @comment.body %></p>');
+  questionCommentsBlock.find('input#body').val('');
+<% end %>

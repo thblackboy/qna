@@ -21,12 +21,11 @@ I'd like to be able to edit links when ask question
     end
 
     scenario 'edits links' do
-      fill_in 'Link name', with: 'google2'
+      fill_in 'Link name', with: 'lolo2'
       click_on 'Save'
       click_on 'Show'
-
       expect(page).to_not have_link 'google'
-      expect(page).to have_link 'google2'
+      expect(page).to have_link 'lolo2'
     end
 
     scenario 'edits links with invalid attributes' do
