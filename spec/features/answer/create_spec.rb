@@ -69,7 +69,6 @@ I'd like to be able to answer the question
     visit questions_path
     click_on 'Show'
 
-    expect(page).to have_content 'Only authenticated users can make answers'
     expect(page).to_not have_content 'Create answer'
   end
 end

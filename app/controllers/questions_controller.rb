@@ -47,18 +47,8 @@ class QuestionsController < ApplicationController
 
   def publish_question
     unless question.errors.any?
-      ActionCable.server.broadcast('questions', { html: {
-        author: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: current_user }
-          ),
-        user: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: User.new }
-          ),
-        guest: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: nil }
-          )
-        
-      }, author_id: current_user.id })
+      ActionCable.server.broadcast('questions', ApplicationController.render(partial: 'templates/questions/question',
+                                                                                      locals: { question: question }))
     end
   end
 

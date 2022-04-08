@@ -42,18 +42,9 @@ class AnswersController < ApplicationController
 
   def publish_answer
     unless answer.errors.any?
-      AnswerChannel.broadcast_to(question , { html: {
-        question_author: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: question.author }
-          ),
-        user: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: User.new }
-          ),
-        guest: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: nil }
-          )
-        
-      }, question_author_id: question.author_id, author_id: current_user.id })
+      AnswerChannel.broadcast_to(question , { html: ApplicationController.render(partial: 'templates/answers/answer',
+                                              locals: { answer: answer }
+        ), author_id: current_user.id })
     end
   end
 

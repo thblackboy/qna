@@ -2,7 +2,7 @@
   .answer id = answer.id
     .votes
       -if can?(:vote_up,answer)
-        -if current_user&.vote_to(answer).present?
+        -if current_user.vote_to(answer).present?
           = link_to  "Delete vote", vote_path(current_user.vote_to(answer)), method: :delete, class: 'delete-vote', data: { type: :json }, remote: true
         -else
           = link_to  "Vote Up", vote_up_answer_path(answer), method: :post, class: 'do-vote', data: { type: :json }, remote: true

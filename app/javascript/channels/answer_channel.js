@@ -7,14 +7,7 @@ $(document).on('turbolinks:load', function(){
       received(data) {
         if (data['author_id'] == gon.user_id)
           return;
-        let htmlBlock;
-        if (data['question_author_id'] == gon.user_id)
-          htmlBlock = data['html']['question_author'];
-        else if (typeof(gon.user_id) == "undefined")
-          htmlBlock = data['html']['guest'];
-        else
-          htmlBlock = data['html']['user'];
-        $('.answers').append(htmlBlock);
+        $('.answers').append(data['html']);
       }
     });
     this.answerChannelSubscription = subscription;
