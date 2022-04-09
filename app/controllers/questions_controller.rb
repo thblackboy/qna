@@ -6,6 +6,7 @@ class QuestionsController < ApplicationController
   expose :questions, -> { Question.all }
   expose :question, find: ->(id) { Question.with_attached_files.find(id) },
                     build: ->(question_params) { current_user.questions.build(question_params) }
+  authorize_resource
 
   def create
     if question.save
@@ -31,41 +32,23 @@ class QuestionsController < ApplicationController
     question.comments.push(@comment)
   end
 
-  def delete_attached_file
-    @file = ActiveStorage::Attachment.find(params[:file_id])
-    @file.purge if current_user.author_of?(question) && @file.present?
-  end
-
   def update
     question.files.attach(params[:question][:files]) unless params[:question][:files].nil?
     question.update(question_params_for_edit)
   end
 
   def destroy
-    if current_user.author_of?(question)
-      question.destroy
-      redirect_to questions_path, notice: 'Question was deleted'
-    else
-      redirect_to questions_path, notice: "You can't delete someone else's answer"
-    end
+    authorize!(:destroy, question)
+    question.destroy
+    redirect_to questions_path, notice: 'Question was deleted'
   end
 
   private
 
   def publish_question
     unless question.errors.any?
-      ActionCable.server.broadcast('questions', { html: {
-        author: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: current_user }
-          ),
-        user: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: User.new }
-          ),
-        guest: ApplicationController.render(partial: 'templates/questions/question',
-                                              locals: { question: question, current_user: nil }
-          )
-        
-      }, author_id: current_user.id })
+      ActionCable.server.broadcast('questions', ApplicationController.render(partial: 'templates/questions/question',
+                                                                                      locals: { question: question }))
     end
   end
 

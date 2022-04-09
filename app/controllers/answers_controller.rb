@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   after_action :publish_answer, only: [:create]
   after_action :publish_comment, only: [:add_comment]
 
+  authorize_resource
 
   expose(:question)
   expose(:answers) { question.answers }
@@ -26,36 +27,24 @@ class AnswersController < ApplicationController
 
   def set_best
     question = answer.question
-    if current_user.author_of?(question)
-      answer.author.achieves.push(question.achieve) if question.achieve.present?
-      @old_best_answer_id = question.best_answer_id
-      question.update(best_answer_id: answer.id)
-    end
+    answer.author.achieves.push(question.achieve) if question.achieve.present?
+    @old_best_answer_id = question.best_answer_id
+    question.update(best_answer_id: answer.id)
   end
 
   def destroy
+    authorize!(:destroy, answer)
     @question = answer.question
-    if current_user.author_of?(answer)
-      answer.destroy
-    end
+    answer.destroy
   end
 
   private
 
   def publish_answer
     unless answer.errors.any?
-      AnswerChannel.broadcast_to(question , { html: {
-        question_author: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: question.author }
-          ),
-        user: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: User.new }
-          ),
-        guest: ApplicationController.render(partial: 'templates/answers/answer',
-                                              locals: { answer: answer, current_user: nil }
-          )
-        
-      }, question_author_id: question.author_id, author_id: current_user.id })
+      AnswerChannel.broadcast_to(question , { html: ApplicationController.render(partial: 'templates/answers/answer',
+                                              locals: { answer: answer }
+        ), author_id: current_user.id })
     end
   end
 

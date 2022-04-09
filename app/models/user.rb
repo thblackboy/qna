@@ -13,8 +13,4 @@ class User < ApplicationRecord
   def vote_to(item)
     votes.find_by(votable: item)
   end
-
-  def author_of?(item)
-    id == item.author_id
-  end
 end

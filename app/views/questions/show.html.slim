@@ -7,7 +7,7 @@ p= question.body
 .attaches
   = render 'shared/attached_files', resource: question
 h2= 'Answers'
--if user_signed_in?
+-if can?(:create, Answer)
   .answer-errors
     = render 'shared/errors', resource: @exposed_answer
   = form_with model: [question, @exposed_answer], id: 'new-answer-form', local: false do |f|
@@ -25,8 +25,6 @@ h2= 'Answers'
         = link_to_add_association 'add link', f, :links
     p
     = f.submit 'Create answer'
--else
-  p= 'Only authenticated users can make answers'
 br
 .all-answers
   .best-answer

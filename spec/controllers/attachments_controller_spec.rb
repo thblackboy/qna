@@ -38,7 +38,7 @@ RSpec.describe AttachmentsController, type: :controller do
       it 'render delete attached file' do
         delete :destroy, params: { id: answer.files[0].id }, format: :js
         answer.reload
-        expect(response).to render_template :destroy
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

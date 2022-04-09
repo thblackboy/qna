@@ -1,8 +1,8 @@
 -if answer.persisted?
   .answer id = answer.id
     .votes
-      -if current_user && !current_user.author_of?(answer)
-        -if current_user&.vote_to(answer).present?
+      -if can?(:vote_up,answer)
+        -if current_user.vote_to(answer).present?
           = link_to  "Delete vote", vote_path(current_user.vote_to(answer)), method: :delete, class: 'delete-vote', data: { type: :json }, remote: true
         -else
           = link_to  "Vote Up", vote_up_answer_path(answer), method: :post, class: 'do-vote', data: { type: :json }, remote: true
@@ -15,36 +15,38 @@
     .attaches
       = render 'shared/attached_files', resource: answer
     p
-      -if current_user&.author_of?(answer)
+      -if can?(:update,answer)
         = link_to  "Edit", '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+      -if can?(:destroy,answer)
         = link_to  "Delete", answer_path(answer), method: :delete, remote: true
-      -if current_user&.author_of?(answer.question) && answer.id != answer.question.best_answer_id
+      -if can?(:set_best,answer) && answer.id != answer.question.best_answer_id
         = link_to  "Best answer", set_best_answer_path(answer), method: :patch, remote: true
     p Comments:
     .comments
       = render answer.comments
-      -if current_user
+      -if can?(:add_comment, Answer)
         = form_with url: url_for(add_comment_answer_path(answer)), local: false, method: :post do |f|
           = f.label :body, "Comment body"
           = f.text_field :body
           = f.submit "Add comment"
-    .answer-errors id = answer.id
-      = render 'shared/errors', resource: answer
-    = form_with model: answer ,
-                  local: false,
-                  html: { style: 'display: none',
-                          id: "edit-answer-#{answer.id}" } do |f| 
-      p
-        =f.label :body, 'Edit body'
-        =f.text_area :body
-      p
-        =f.label :files
-        =f.file_field :files, multiple: true, direct_upload: true
-      p Links
-      #links
-        = f.fields_for :links do |link|
-          = render 'link_fields', f: link
-        .links
-          = link_to_add_association 'add link', f, :links
-      p
-        =f.submit 'Save'
+    -if can?(:update, answer)
+      .answer-errors id = answer.id
+        = render 'shared/errors', resource: answer
+      = form_with model: answer ,
+                    local: false,
+                    html: { style: 'display: none',
+                            id: "edit-answer-#{answer.id}" } do |f| 
+        p
+          =f.label :body, 'Edit body'
+          =f.text_area :body
+        p
+          =f.label :files
+          =f.file_field :files, multiple: true, direct_upload: true
+        p Links
+        #links
+          = f.fields_for :links do |link|
+            = render 'link_fields', f: link
+          .links
+            = link_to_add_association 'add link', f, :links
+        p
+          =f.submit 'Save'

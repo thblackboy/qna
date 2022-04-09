@@ -7,9 +7,9 @@ I'd like to be able to answer the question
 " do
   given!(:question) { create(:question) }
 
-  context "multiply sessions" do
+  context "multiply sessions", js: true do
     given(:user) { create(:user) }
-    scenario 'answer appears on another users page', js: true do
+    scenario 'answer appears on another users page' do
       Capybara.using_session('user') do
         login(user)
         click_on 'Show'
@@ -69,7 +69,6 @@ I'd like to be able to answer the question
     visit questions_path
     click_on 'Show'
 
-    expect(page).to have_content 'Only authenticated users can make answers'
     expect(page).to_not have_content 'Create answer'
   end
 end

@@ -12,7 +12,7 @@ I'd like to be able to ask a question
         login(user)
       end
       Capybara.using_session('guest') do
-        visit questions_path
+        visit root_path
       end
       Capybara.using_session('user') do
         click_on 'Ask question'
@@ -66,7 +66,6 @@ I'd like to be able to ask a question
 
   scenario 'Unauthenticated uset tries to ask question' do
     visit questions_path
-    click_on 'Ask question'
-    expect(page).to have_content 'You need to sign in or sign up before continuing'
+    expect(page).to_not have_content 'Ask question'
   end
 end

@@ -20,7 +20,11 @@
                 destroy_user_session_path,
                 rel: 'nofollow',
                 method: :delete %>
-      <% end %>
+    <% else %>
+      <%= link_to "Login",
+                new_user_session_path,
+                rel: 'nofollow' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>
