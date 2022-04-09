@@ -4,7 +4,7 @@ $(document).on('turbolinks:load', function(){
     if(!this.questionChannelSubscription){
       var subscription = consumer.subscriptions.create({ channel: "QuestionChannel" }, {
         received(data) {
-          $('.questions').append(data);
+          $('.questions').prepend(data);
         }
       });
       this.questionChannelSubscription = subscription;

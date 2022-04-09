@@ -136,7 +136,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'reditects to question' do
         delete :destroy, params: { id: answer }, format: :js
-        expect(response).to redirect_to root_url
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end

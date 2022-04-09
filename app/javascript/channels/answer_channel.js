@@ -7,7 +7,7 @@ $(document).on('turbolinks:load', function(){
       received(data) {
         if (data['author_id'] == gon.user_id)
           return;
-        $('.answers').append(data['html']);
+        $('.answers').prepend(data['html']);
       }
     });
     this.answerChannelSubscription = subscription;
