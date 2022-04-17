@@ -1,4 +1,17 @@
 Rails.application.routes.draw do
+  use_doorkeeper
+
+  namespace :api do
+    namespace :v1 do
+      resources :profiles, only: [:index] do
+        get :me, on: :collection
+      end
+      resources :questions, except: %i[new edit] do
+        resources :answers, shallow: true, except: %i[new edit]
+      end
+    end
+  end
+
   concern :votable do
     member do
       post :vote_up
@@ -16,12 +29,14 @@ Rails.application.routes.draw do
   resources :achieves, only: :index
   resources :votes, only:  :destroy
   resources :attachments, only: :destroy
-  resources :questions, only: %i[index show new create update destroy], concerns: [:votable, :commentable], defaults: { votable: 'questions' } do
-    resources :answers, shallow: true, only: %i[create update destroy], concerns: [:votable, :commentable], defaults: { votable: 'answers' } do
+  resources :questions, only: %i[index show new create update destroy], concerns: %i[votable commentable],
+                        defaults: { votable: 'questions' } do
+    resources :answers, shallow: true, only: %i[create update destroy], concerns: %i[votable commentable],
+                        defaults: { votable: 'answers' } do
       member do
         patch :set_best
       end
     end
   end
-  root to: "questions#index"
+  root to: 'questions#index'
 end

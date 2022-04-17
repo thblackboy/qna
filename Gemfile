@@ -34,6 +34,9 @@ gem "cocoon"
 gem "validate_url"
 gem 'gon'
 gem 'cancancan'
+gem 'doorkeeper'
+gem 'active_model_serializers'
+gem 'oj'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
