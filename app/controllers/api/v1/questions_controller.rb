@@ -1,41 +1,39 @@
 class Api::V1::QuestionsController < Api::V1::BaseController
   before_action :set_question, only: %i[show update destroy]
 
+  authorize_resource
+
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def index
-    authorize(:read, Question)
     @questions = Question.all
     render json: @questions, each_serializer: QuestionsSerializer
   end
 
   def create
-    authorize(:create, Question)
     @question = current_resource_owner.questions.build(question_params)
     if @question.save
-      head 201
+      render json: @question, status: 201
     else
       head 400
     end
   end
 
   def update
-    authorize(:update, @question)
     @question.update(question_params)
     if @question.errors.any?
       head 400
     else
-      head 200
+      render json: @question, status: 200
     end
   end
 
   def show
-    authorize(:read, @question)
     render json: @question
   end
 
   def destroy
-    authorize(:destroy, @question)
+    authorize!(:destroy, @question)
     @question.destroy
     head 200
   end

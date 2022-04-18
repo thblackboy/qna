@@ -36,7 +36,7 @@ describe 'Answers API', type: :request do
   end
 
   describe 'GET /answers/:id ' do
-    let!(:answer) { create(:answer, question: question) }
+    let!(:answer) { create(:answer, :with_file, question: question) }
     let!(:comment) { create(:comment, commentable: answer) }
     let!(:link) { create(:link, linkable: answer) }
     let(:api_path) { api_v1_answer_path(answer) }

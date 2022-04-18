@@ -4,7 +4,7 @@ class Api::V1::ProfilesController < Api::V1::BaseController
   end
 
   def index
-    authorize(:read, User)
+    authorize!(:read, User)
     @users = User.all_except(current_resource_owner)
     render json: @users
   end

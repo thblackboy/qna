@@ -6,7 +6,7 @@ class Api::V1::BaseController < ApplicationController
     @current_resource_owner ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 
-  def authorize(method, object)
-    raise CanCan::AccessDenied unless Ability.new(current_resource_owner).can? method.to_sym, object
+  def current_ability
+    @current_abililty ||= Ability.new(current_resource_owner)
   end
 end

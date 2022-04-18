@@ -9,8 +9,10 @@ FactoryBot.define do
     trait :invalid do
       title { nil }
     end
-    after(:build) do |answer|
-      answer.files.attach(io: File.open('spec/image.png'), filename: 'image.png', content_type: 'image/png')
+    trait :with_file do
+      after(:build) do |question|
+        question.files.attach(io: File.open('spec/image.png'), filename: 'image.png', content_type: 'image/png')
+      end
     end
   end
 end
