@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ActiveStorage::SetCurrent
   before_action :set_gon_user, unless: :devise_controller?
 
   private
