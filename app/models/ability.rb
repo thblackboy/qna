@@ -48,5 +48,8 @@ class Ability
     can :destroy, ActiveStorage::Attachment, { record: { author_id: user.id } }
 
     can :set_best, Answer, { question: { author_id: user.id } }
+
+    can :subscribe, Question
+    can :unsubscribe, Question
   end
 end

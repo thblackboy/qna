@@ -5,6 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :questions, foreign_key: 'author_id', dependent: :destroy
+  has_many :question_subscribers, foreign_key: 'subscriber_id', dependent: :destroy
+  has_many :subscribed_questions, foreign_key: 'question_id', through: :question_subscribers
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
   has_many :comments, foreign_key: 'author_id', dependent: :destroy
   has_many :achieves, class_name: 'Achieve', dependent: :nullify
@@ -22,5 +24,9 @@ class User < ApplicationRecord
 
   def vote_to(item)
     votes.find_by(votable: item)
+  end
+
+  def subscribed_to?(question)
+    subscribed_questions.include?(question)
   end
 end

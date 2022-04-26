@@ -43,6 +43,14 @@ class QuestionsController < ApplicationController
     redirect_to questions_path, notice: 'Question was deleted'
   end
 
+  def subscribe
+    current_user.subscribed_questions.push(question)
+  end
+
+  def unsubscribe
+    current_user.subscribed_questions.delete(question) if current_user.subscribed_questions.include?(question)
+  end
+
   private
 
   def publish_question

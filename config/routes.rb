@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, ->(u) { u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
 
   namespace :api do
@@ -31,6 +37,8 @@ Rails.application.routes.draw do
   resources :attachments, only: :destroy
   resources :questions, only: %i[index show new create update destroy], concerns: %i[votable commentable],
                         defaults: { votable: 'questions' } do
+    post :subscribe, on: :member
+    delete :unsubscribe, on: :member
     resources :answers, shallow: true, only: %i[create update destroy], concerns: %i[votable commentable],
                         defaults: { votable: 'answers' } do
       member do

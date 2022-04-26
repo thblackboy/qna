@@ -1,0 +1,5 @@
+' DailyDigest
+= "\r\n" * 2
+' 
+- @questions.each do |question|
+  = "Title: #{question.title} link: #{url_for(question)}"
