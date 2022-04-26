@@ -16,9 +16,9 @@
     -if can?(:update, question)
       = link_to  "Edit", "#", class: 'edit-question-link', data: { question_id: question.id }
     -if can?(:subscribe, question) && !current_user.subscribed_to?(question)
-      = link_to  "Subscribe for updates", subscribe_question_path(question), method: :post, class: 'subscribe-question-link', remote: true
+      = link_to  "Subscribe for updates", subscribe_question_question_subscribers_path(question), method: :post, class: 'subscribe-question-link', remote: true
     -if can?(:unsubscribe, question) && current_user.subscribed_to?(question)
-      = link_to  "Unsubscribe", unsubscribe_question_path(question), method: :delete, class: 'unsubscribe-question-link', remote: true
+      = link_to  "Unsubscribe", unsubscribe_question_question_subscribers_path(question), method: :delete, class: 'unsubscribe-question-link', remote: true
   p Comments:
   .comments
     = render question.comments

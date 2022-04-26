@@ -1,0 +1,3 @@
+var questionActionsBlock = $('.question#<%= @question.id %>').children('.actions');
+questionActionsBlock.children("a.unsubscribe-question-link").remove()
+questionActionsBlock.append('<%= link_to 'Subscribe for updates', subscribe_question_question_subscribers_path(@question), method: :post, class: 'subscribe-question-link', remote: true %>');

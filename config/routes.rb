@@ -37,8 +37,10 @@ Rails.application.routes.draw do
   resources :attachments, only: :destroy
   resources :questions, only: %i[index show new create update destroy], concerns: %i[votable commentable],
                         defaults: { votable: 'questions' } do
-    post :subscribe, on: :member
-    delete :unsubscribe, on: :member
+    resources :question_subscribers, only: [] do
+      post :subscribe, on: :collection
+      delete :unsubscribe, on: :collection
+    end
     resources :answers, shallow: true, only: %i[create update destroy], concerns: %i[votable commentable],
                         defaults: { votable: 'answers' } do
       member do
