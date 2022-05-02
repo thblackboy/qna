@@ -1,0 +1,8 @@
+h1 DailyDigest
+.questions 
+  - @questions.each do |question|
+    .question id = question.id
+      .title
+        = question.title
+      .actions
+        = link_to "Show", url_for(question)

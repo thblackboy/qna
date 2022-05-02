@@ -11,4 +11,11 @@ class Answer < ApplicationRecord
   accepts_nested_attributes_for :links, reject_if: :all_blank, allow_destroy: true
 
   validates :body, presence: true
+
+  after_create :send_alarm_to_subscribers
+
+  private
+  def send_alarm_to_subscribers
+    NewAnswerAlarmJob.perform_later(self)
+  end
 end

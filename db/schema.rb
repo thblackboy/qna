@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_09_171007) do
+ActiveRecord::Schema.define(version: 2022_04_25_065547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,15 @@ ActiveRecord::Schema.define(version: 2022_04_09_171007) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
+  create_table "question_subscribers", force: :cascade do |t|
+    t.bigint "question_id", null: false
+    t.bigint "subscriber_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["question_id"], name: "index_question_subscribers_on_question_id"
+    t.index ["subscriber_id"], name: "index_question_subscribers_on_subscriber_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -169,7 +178,11 @@ ActiveRecord::Schema.define(version: 2022_04_09_171007) do
   add_foreign_key "answers", "users", column: "author_id"
   add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_grants", "users", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id"
+  add_foreign_key "question_subscribers", "questions"
+  add_foreign_key "question_subscribers", "users", column: "subscriber_id"
   add_foreign_key "questions", "answers", column: "best_answer_id"
   add_foreign_key "questions", "users", column: "author_id"
   add_foreign_key "votes", "users", column: "voter_id"
